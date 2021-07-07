@@ -50,4 +50,3 @@ function sweep(begin = new Date(), end = new Date(begin.getTime()+7*24*60*60*100
 }
 
 // sweep('5/30/21', '6/15/21');
-
