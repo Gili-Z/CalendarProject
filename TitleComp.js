@@ -1,5 +1,3 @@
-//test function is unpredictable! understand its counterintuitive behavior
-
 function titleComp() {
 
   let sheet = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing');
@@ -32,12 +30,14 @@ function titleComp() {
       Logger.log(title);
 
       for (k in formats){
-        Logger.log(formats[k].test(title));
-        if (formats[k].test(title) == true){
+        formats[k].lastIndex = 0;
+        match = formats[k].test(title);
+        Logger.log(match);
+        if (match){
           should_i_email = false;
         }
       }
-      Logger.log(`Format loop completed for ${events[j]}. Should I email? ${should_i_email}`);
+      Logger.log(`Format loop completed for ${events[j].getTitle()}. Should I email? ${should_i_email}`);
 
       if (should_i_email == true) {
         // this would email 'creator', but i don't want to accidentally email anyone right now
