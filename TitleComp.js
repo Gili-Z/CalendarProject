@@ -77,7 +77,7 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
   SpreadsheetApp.setActiveSpreadsheet(sheet);
   SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
   
-  let lower_corner = `${String.fromCharCode(98 + users.length).toUpperCase()}${2+types.length}`;
+  let lower_corner = `${String.fromCharCode(99 + users.length).toUpperCase()}${3+types.length}`;
 
   // clear sheet
   range = SpreadsheetApp.getActiveSheet().getRange(`B2:Z`);
@@ -90,22 +90,36 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
   // setting event and user names
   for (i in types){
     range.getCell(parseInt(i)+2, 1).setValue(types[i]);
+    range.getCell(parseInt(i)+2, 1).setBackground('#fce1bb');
   }
 
   for (i in users){
     range.getCell(1, parseInt(i)+2).setValue(users[i]);
+    range.getCell(1, parseInt(i)+2).setBackground('#bbfcc0');
   }
 
   // entering time in hours
   for (i in types){
     for (j in users){
       range.getCell(parseInt(i)+2, parseInt(j)+2).setValue(nested[i][j]);
+      range.getCell(parseInt(i)+2, parseInt(j)+2).setBackground('#fdffdb');
     }
+  }
+
+  // entering summation formulas at end caps
+  for (i in users){
+    range.getCell(types.length+2, parseInt(i)+2).setBackground(`#c2f7ff`);
+    range.getCell(types.length+2, parseInt(i)+2).setValue(`=sum(${String.fromCharCode(99 + parseInt(i))}3:
+    ${String.fromCharCode(99 + parseInt(i)).toUpperCase()}${types.length+2})`);
+  }
+
+  for (i in types){
+    range.getCell(parseInt(i)+2, users.length+2).setBackground(`#f4d9fc`);
+    range.getCell(parseInt(i)+2, users.length+2).setValue(`=sum(c${parseInt(i)+3}:
+    ${String.fromCharCode(98 + users.length).toUpperCase()}${parseInt(i)+3})`);
   }
 }
 
-
-// add total bar at end of each row (and column)
 
 
 
