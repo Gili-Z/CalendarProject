@@ -80,7 +80,7 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
   let lower_corner = `${String.fromCharCode(99 + users.length).toUpperCase()}${3+types.length}`;
 
   // clear sheet
-  range = SpreadsheetApp.getActiveSheet().getRange(`B2:Z`);
+  range = SpreadsheetApp.getActiveSheet().getRange(`B2:ZZ`);
   range.clear();
   
   // set new range and enter data
