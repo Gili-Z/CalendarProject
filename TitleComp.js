@@ -1,7 +1,10 @@
-function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*24*60*60*1000)) {
+function titleComp(cal_indices = [0],
+                   start = new Date(), 
+                   end = new Date((new Date()).getTime()+7*24*60*60*1000),
+                   sheet_url = 'https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing') {
 
   // opening regex sheet
-  let sheet = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing');
+  let sheet = SpreadsheetApp.openByUrl(sheet_url);
   SpreadsheetApp.setActiveSpreadsheet(sheet);
   SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
   
@@ -21,7 +24,10 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
   }
 
   // getting calendar events + data
-  let cals = CalendarApp.getAllCalendars();
+  let cals = [];
+  for (i in cal_indices){
+    cals.push(CalendarApp.getAllCalendars()[parseInt(cal_indices[i])]);
+  }
   let types = [];
   let users = [];
   let nested = [];
@@ -131,12 +137,15 @@ function doGet(e){
     names.push(cals[i].getName());
     ids.push(cals[i].getId());
   }
+  
   html.names = names;
   html.ids = ids;
 
   return html.evaluate().setTitle("Calendar Sweep");
 }
 
-
-
+// get link feature to work, 
+// create new google sheet with date info in title and return it to user
+// add documentation on site
+// deploy/test
 

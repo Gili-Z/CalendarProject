@@ -5,17 +5,34 @@
   </head>
   <body>
 
-    <h1 style="font-family:georgia,garamond,serif;"> CALENDAR SWEEP </h1>
+    <h1 style="font-family:georgia,garamond,serif;"> CALENDAR SWEEP; </h1>
 
-    <label style="font-family:georgia,garamond,serif; font-style:italic;"> Key (Google Sheet) URL: </label> <input type = "text" id = "link">
-
-      <br>
-    <label style="font-family:georgia,garamond,serif; font-style:italic;"> Start Date: </label> <input type = "text" id = "start_date">
-      <br>
-    <label style="font-family:georgia,garamond,serif; font-style:italic;"> End Date: </label> <input type = "text" id = "end_date">
-      <br>
+    <!-- sheet -->
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #247325;"> Key (Google Sheet) URL: </label> <input type = "text" id = "link" style="width:1000px;">
       <br>
 
+    <!-- dates -->
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #2c2ec7;"> 
+      Start Date:
+    </label> 
+  
+    <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e;"> 
+       (MM/DD/YY or Month Day, Year)
+    </label> <input type = "text" id = "start_date">
+      <br>
+
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #c72cbf;"> 
+      End Date:
+    </label> 
+  
+    <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e;"> 
+       (MM/DD/YY or Month Day, Year)
+    </label> <input type = "text" id = "end_date">
+
+      <br>
+      <br>
+
+    <!-- calendars -->
     <h3 style="font-family:georgia,garamond,serif; font-style: normal;"> Which calendars would you like to sweep? </h3> 
       <br>
     
@@ -25,8 +42,12 @@
 
     <input type="checkbox" id = "all"> <label> SELECT ALL <label>
     <br>
+    <br>
+    <br>
 
-    <h1> <button id="btn" style="font-size:40px;"> Go! </button> </h1>
+    <button id="btn" style="font-size:40px; font-family:georgia,garamond,serif; background-color: #f0776e; color: #fff8f7;"> 
+      Go! 
+    </button>
 
 
     <script>
@@ -34,23 +55,54 @@
 
       function selAll(){
           if (document.getElementById("all").checked){
-            for (i =0; i<Infinity; i++){
-              document.getElementById(`${i}`).checked = true;
+            for (i =0; i < Infinity; i++){
+              try{
+                document.getElementById(`${i}`).checked = true;
+              } catch{
+                break;
+              }
+            }
+          }
+          if (!(document.getElementById("all").checked)){
+            for (i =0; i < Infinity; i++){
+              try{
+                document.getElementById(`${i}`).checked = false;
+              } catch {
+                break;
+              }
             }
           }
       }
-      // document.getElementById("btn").addEventListener("click", doStuff);
+    </script>
 
-      // function doStuff(){
-      //   let uname = document.getElementById("link").value;
+    <script>
+      document.getElementById("btn").addEventListener("click", runTitleComp);
 
-      //   google.script.run.userClicked(uname);
-      //   alert(document.getElementById("start_date").value)
-      //   document.getElementById("link").value = "";
-      //   document.getElementById("start_date").value = "";
-      //   document.getElementById("end_date").value = "";
-      // }
+      function runTitleComp(){
+        // assigning variables
+        link = document.getElementById("link").value;
+        start = document.getElementById("start_date").value; 
+        end = document.getElementById("end_date").value;
+        cal_list = [];
 
+        // assembling calendar index list
+        for (i =0; i<Infinity; i++){
+          try{
+            // alert(`${i}: ` + document.getElementById(`${i}`).checked);
+            if(document.getElementById(`${i}`).checked){
+              cal_list.push(i);
+            }
+          } catch{
+            break;
+          }
+        }
+
+        google.script.run.titleComp(cal_list, start, end);
+
+        document.getElementById("start_date").value = ""; 
+        document.getElementById("end_date").value = "";
+
+      }
       </script>
 
   </body>
