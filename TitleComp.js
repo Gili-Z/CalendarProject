@@ -67,7 +67,7 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
       // sending email if title does not match any formats
       if (should_i_email == true) {
         // this would email 'creator', but i don't want to accidentally email anyone right now
-        GmailApp.sendEmail('gili4prez@gmail.com', "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" at ${events[j].getStartTime()} was titled incorrectly. Please refer to the spreadsheet at https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing to review naming conventions.\n\nThank you!\nFrom Calbot`);
+        GmailApp.sendEmail('gili4prez@gmail.com', "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" on ${events[j].getStartTime().toDateString()} was titled incorrectly. Please refer to the spreadsheet at https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing to review naming conventions.\n\nThank you!\nFrom Calbot`);
       }
     }
   }
@@ -120,7 +120,22 @@ function titleComp(start = new Date(), end = new Date((new Date()).getTime()+7*2
   }
 }
 
+function doGet(e){
+  Logger.log(e);
+  let html = HtmlService.createTemplateFromFile('Page');
 
+  let cals = CalendarApp.getAllCalendars();
+  names = []
+  ids = []
+  for (i in cals){
+    names.push(cals[i].getName());
+    ids.push(cals[i].getId());
+  }
+  html.names = names;
+  html.ids = ids;
+
+  return html.evaluate().setTitle("Calendar Sweep");
+}
 
 
 

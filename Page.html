@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+
+    <h1 style="font-family:georgia,garamond,serif;"> CALENDAR SWEEP </h1>
+
+    <label style="font-family:georgia,garamond,serif; font-style:italic;"> Key (Google Sheet) URL: </label> <input type = "text" id = "link">
+
+      <br>
+    <label style="font-family:georgia,garamond,serif; font-style:italic;"> Start Date: </label> <input type = "text" id = "start_date">
+      <br>
+    <label style="font-family:georgia,garamond,serif; font-style:italic;"> End Date: </label> <input type = "text" id = "end_date">
+      <br>
+      <br>
+
+    <h3 style="font-family:georgia,garamond,serif; font-style: normal;"> Which calendars would you like to sweep? </h3> 
+      <br>
+    
+    <? for (i in names) { ?>
+      <input type="checkbox" id = "<?=i?>"> <?= names[i] ?>
+    <? } ?>
+
+    <input type="checkbox" id = "all"> <label> SELECT ALL <label>
+    <br>
+
+    <h1> <button id="btn" style="font-size:40px;"> Go! </button> </h1>
+
+
+    <script>
+      document.getElementById("all").addEventListener("change", selAll);
+
+      function selAll(){
+          if (document.getElementById("all").checked){
+            for (i =0; i<Infinity; i++){
+              document.getElementById(`${i}`).checked = true;
+            }
+          }
+      }
+      // document.getElementById("btn").addEventListener("click", doStuff);
+
+      // function doStuff(){
+      //   let uname = document.getElementById("link").value;
+
+      //   google.script.run.userClicked(uname);
+      //   alert(document.getElementById("start_date").value)
+      //   document.getElementById("link").value = "";
+      //   document.getElementById("start_date").value = "";
+      //   document.getElementById("end_date").value = "";
+      // }
+
+      </script>
+
+  </body>
+</html>
