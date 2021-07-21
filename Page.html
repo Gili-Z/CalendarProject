@@ -2,13 +2,29 @@
 <html>
   <head>
     <base target="_top">
+    <!-- Dev. Gil'i Zaid - gili4prez@gmail.com - Gili-Z on GitHub -->
   </head>
   <body>
+    /////////////////////////////////////////////////////////////////////////////<br>
+    <h1 style="font-family:georgia,garamond,serif; display:inline;"> CALENDAR SWEEP; </h1>
+      <br>
 
-    <h1 style="font-family:georgia,garamond,serif;"> CALENDAR SWEEP; </h1>
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #6e6e6e; font-size: 10;">  
+      #A simple web app to collect data about a user's calendars. 
+    </label> 
+      <br> 
+      <br>
+      <br>
 
     <!-- sheet -->
     <label style="font-family:georgia,garamond,serif; font-style:italic; color: #247325;"> Key (Google Sheet) URL: </label> <input type = "text" id = "link" style="width:1000px;">
+      <br>
+      <br>
+
+    <a href="https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing" style="margin-left:40px; font-family:georgia,garamond,serif; font-style:normal; font-family: 'Courier New', monospace; color:#093f9c; font-size:4;" target="_blank"> 
+        	&#60; VIEW TEMPLATE &#62;
+    </a>
+      <br>
       <br>
 
     <!-- dates -->
@@ -28,12 +44,18 @@
     <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e;"> 
        (MM/DD/YY or Month Day, Year)
     </label> <input type = "text" id = "end_date">
+      <br>
+      <br>
+
+    <input type="checkbox" id = "scold"> 
+    <label  style="color:#c2910a; font-family:georgia,garamond,serif; font-style:italic; font-size:20;"> I'd like to automatically email the creators of incorrectly titled events. <label>
+    <label style="color:black; font-style:normal;">
 
       <br>
       <br>
 
     <!-- calendars -->
-    <h3 style="font-family:georgia,garamond,serif; font-style: normal;"> Which calendars would you like to sweep? </h3> 
+    <h3 style="font-family:georgia,garamond,serif; font-style: normal; color:black;"> Which calendars would you like to sweep? </h3> 
       <br>
     
     <? for (i in names) { ?>
@@ -48,6 +70,9 @@
     <button id="btn" style="font-size:40px; font-family:georgia,garamond,serif; background-color: #f0776e; color: #fff8f7;"> 
       Go! 
     </button>
+
+    <div id = 'output'></div>
+
 
 
     <script>
@@ -79,7 +104,9 @@
       document.getElementById("btn").addEventListener("click", runTitleComp);
 
       function runTitleComp(){
+
         // assigning variables
+        scold = document.getElementById("scold").checked;
         link = document.getElementById("link").value;
         start = document.getElementById("start_date").value; 
         end = document.getElementById("end_date").value;
@@ -97,11 +124,46 @@
           }
         }
 
-        google.script.run.titleComp(cal_list, start, end);
+        // function onSuccess(out_url){
+        //   // document.getElementById('x').value = out_url;
+        //   alert(out_url);
+        //   Logger.log(out_url);
+        
+        let runs = true;
+        let out_url;
+        
+        // are inputs valid?
+        google.script.run.withFailureHandler(eh).trial(link);
 
-        document.getElementById("start_date").value = ""; 
-        document.getElementById("end_date").value = "";
+        if (new Date(start) == "Invalid Date"){
+          alert("Invalid Start Date");
+          runs = false;
+        }
 
+        if (new Date(end) == "Invalid Date"){
+          alert("Invalid End Date");
+          runs = false;
+        }
+
+        // // }
+        // google.script.run.withSuccessHandler(onSuccess).titleComp(cal_list, start, end);
+       
+        function eh(error){
+          alert(error);
+          runs = false;
+        }
+
+        function onSuccess(out_url){
+          document.getElementById('output').innerHTML = `<br><a href="${out_url}" target="_blank">[ ➟OPEN MY SPREADSHEET ]</a>`;
+        }
+
+        if (runs == true){
+          google.script.run.withSuccessHandler(onSuccess).withFailureHandler(eh).titleComp(cal_list, start, end, link, scold);
+          alert("Running... ");
+
+          document.getElementById("start_date").value = ""; 
+          document.getElementById("end_date").value = "";
+        }
       }
       </script>
 

@@ -1,7 +1,10 @@
+// Dev. Gil'i Zaid - gili4prez@gmail.com - Gili-Z on GitHub
+
 function titleComp(cal_indices = [0],
                    start = new Date(), 
                    end = new Date((new Date()).getTime()+7*24*60*60*1000),
-                   sheet_url = 'https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing') {
+                   sheet_url = 'https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing',
+                   scold = 1) {
 
   // opening regex sheet
   let sheet = SpreadsheetApp.openByUrl(sheet_url);
@@ -70,25 +73,40 @@ function titleComp(cal_indices = [0],
   
       // Logger.log(`Format loop completed for ${events[j].getTitle()}. Should I email? ${should_i_email}`);
 
-      // sending email if title does not match any formats
-      if (should_i_email == true) {
+      // sending email if title does not match any formats and scold is true
+      if (scold == true){
+        if (should_i_email == true) {
         // this would email 'creator', but i don't want to accidentally email anyone right now
-        GmailApp.sendEmail('gili4prez@gmail.com', "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" on ${events[j].getStartTime().toDateString()} was titled incorrectly. Please refer to the spreadsheet at https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing to review naming conventions.\n\nThank you!\nFrom Calbot`);
+        GmailApp.sendEmail("gili4prez@gmail.com", "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" on ${events[j].getStartTime().toDateString()} was titled incorrectly. Please refer to the spreadsheet at ${sheet_url} to review naming conventions.\n\nThank you!\nFrom Calbot`);
+        }
       }
     }
   }
 
-  // adding data to data sheet
-  sheet = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1PGYLqkRZyxtXB3rmpxTpTuCZz74BV4VQKf71fW0rWVI/edit?usp=sharing');
+  // creating sheet
+  let data = SpreadsheetApp.create(`Cumulative Times: ${(new Date(start)).toDateString()} - ${(new Date(end)).toDateString()}`);
+
+  let out_url = data.getUrl();
+
+  // opening and formatting data sheet
+  sheet = SpreadsheetApp.openByUrl(out_url);
   SpreadsheetApp.setActiveSpreadsheet(sheet);
   SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
-  
+
+  range = SpreadsheetApp.getActiveSheet().getRange(`A1:C2`);
+  range.getCell(1, 1).setValue("(time in hrs)");
+  range.getCell(2, 1).setValue("USERS ⇢"); range.getCell(2, 1).setBackground('#bbfcc0');
+  range.getCell(1, 2).setValue("EVENT TYPES ↓"); range.getCell(1, 2).setBackground('#fce1bb');
+  range.getCell(1, 3).setValue(`Processed: ${new Date()}`);
+
+  sheet.getRange('C1:F1').merge();
+  // adding data to data sheet
   let lower_corner = `${String.fromCharCode(99 + users.length).toUpperCase()}${3+types.length}`;
 
   // clear sheet
   range = SpreadsheetApp.getActiveSheet().getRange(`B2:ZZ`);
   range.clear();
-  
+
   // set new range and enter data
   range = SpreadsheetApp.getActiveSheet().getRange(`B2:${lower_corner}`);
   SpreadsheetApp.setActiveRange(range);
@@ -124,6 +142,8 @@ function titleComp(cal_indices = [0],
     range.getCell(parseInt(i)+2, users.length+2).setValue(`=sum(c${parseInt(i)+3}:
     ${String.fromCharCode(98 + users.length).toUpperCase()}${parseInt(i)+3})`);
   }
+
+  return out_url;
 }
 
 function doGet(e){
@@ -144,8 +164,8 @@ function doGet(e){
   return html.evaluate().setTitle("Calendar Sweep");
 }
 
-// get link feature to work, 
-// create new google sheet with date info in title and return it to user
-// add documentation on site
 // deploy/test
 
+function trial(url){
+  SpreadsheetApp.openByUrl(url);
+}
