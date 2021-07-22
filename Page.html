@@ -45,12 +45,29 @@
        (MM/DD/YY or Month Day, Year)
     </label> <input type = "text" id = "end_date">
       <br>
+
+    <!-- destination folder -->
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #411959;"> 
+      Destination Folder ID (optional):
+    </label> 
+
+    <input type = "text" id = "fold_id" style="width:500px;" value="">
+      <br>
       <br>
 
+    <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e; margin-left:40px"> 
+        (https://drive.google.com/drive/u/0/folders/
+          <mark style="background-color:#fcf8c7;">0BytqP_CmvLAWTHZuWHRfUmlsaW8</mark>
+        ?resourcekey=0-yzHF-sWBhyS8lmn_wUcIOA)
+    </label> 
+      <br>
+      <br>
+
+    <!-- email or not -->
     <input type="checkbox" id = "scold"> 
     <label  style="color:#c2910a; font-family:georgia,garamond,serif; font-style:italic; font-size:20;"> I'd like to automatically email the creators of incorrectly titled events. <label>
     <label style="color:black; font-style:normal;">
-
+    
       <br>
       <br>
 
@@ -111,6 +128,7 @@
         start = document.getElementById("start_date").value; 
         end = document.getElementById("end_date").value;
         cal_list = [];
+        fold_id = document.getElementById("fold_id").value;
 
         // assembling calendar index list
         for (i =0; i<Infinity; i++){
@@ -123,11 +141,6 @@
             break;
           }
         }
-
-        // function onSuccess(out_url){
-        //   // document.getElementById('x').value = out_url;
-        //   alert(out_url);
-        //   Logger.log(out_url);
         
         let runs = true;
         let out_url;
@@ -135,6 +148,7 @@
         // are inputs valid?
         google.script.run.withFailureHandler(eh).trial(link);
 
+   
         if (new Date(start) == "Invalid Date"){
           alert("Invalid Start Date");
           runs = false;
@@ -145,8 +159,6 @@
           runs = false;
         }
 
-        // // }
-        // google.script.run.withSuccessHandler(onSuccess).titleComp(cal_list, start, end);
        
         function eh(error){
           alert(error);
@@ -158,7 +170,9 @@
         }
 
         if (runs == true){
-          google.script.run.withSuccessHandler(onSuccess).withFailureHandler(eh).titleComp(cal_list, start, end, link, scold);
+          google.script.run.withSuccessHandler(onSuccess).withFailureHandler(eh).
+                    titleComp(cal_list, start, end, link, scold, fold_id);
+          
           alert("Running... ");
 
           document.getElementById("start_date").value = ""; 

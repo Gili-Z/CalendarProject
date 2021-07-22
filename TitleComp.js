@@ -4,7 +4,8 @@ function titleComp(cal_indices = [0],
                    start = new Date(), 
                    end = new Date((new Date()).getTime()+7*24*60*60*1000),
                    sheet_url = 'https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing',
-                   scold = 1) {
+                   scold = 1,
+                   folder_id = "") {
 
   // opening regex sheet
   let sheet = SpreadsheetApp.openByUrl(sheet_url);
@@ -93,13 +94,14 @@ function titleComp(cal_indices = [0],
   SpreadsheetApp.setActiveSpreadsheet(sheet);
   SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
 
-  range = SpreadsheetApp.getActiveSheet().getRange(`A1:C2`);
+  range = SpreadsheetApp.getActiveSheet().getRange(`A1:H2`);
   range.getCell(1, 1).setValue("(time in hrs)");
   range.getCell(2, 1).setValue("USERS ⇢"); range.getCell(2, 1).setBackground('#bbfcc0');
   range.getCell(1, 2).setValue("EVENT TYPES ↓"); range.getCell(1, 2).setBackground('#fce1bb');
   range.getCell(1, 3).setValue(`Processed: ${new Date()}`);
+  range.getCell(1, 8).setValue(`Created from: ${sheet_url}`);
 
-  sheet.getRange('C1:F1').merge();
+  sheet.getRange('C1:G1').merge();
   // adding data to data sheet
   let lower_corner = `${String.fromCharCode(99 + users.length).toUpperCase()}${3+types.length}`;
 
@@ -143,6 +145,13 @@ function titleComp(cal_indices = [0],
     ${String.fromCharCode(98 + users.length).toUpperCase()}${parseInt(i)+3})`);
   }
 
+  // move sheet to target folder
+  if (folder_id!="" && folder_id!=" "){
+    let file = DriveApp.getFileById(sheet.getId());
+    DriveApp.getFolderById(folder_id).addFile(file);
+    DriveApp.getRootFolder().removeFile(file);
+  }
+
   return out_url;
 }
 
@@ -168,4 +177,8 @@ function doGet(e){
 
 function trial(url){
   SpreadsheetApp.openByUrl(url);
+}
+
+function test(folder_id){
+  DriveApp.getFolderById(folder_id);
 }
