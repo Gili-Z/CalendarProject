@@ -3,9 +3,10 @@
 function titleComp(cal_indices = [0],
                    start = new Date(), 
                    end = new Date((new Date()).getTime()+7*24*60*60*1000),
-                   sheet_url = 'https://docs.google.com/spreadsheets/d/18za7Rgyy9j5dho4KFa7zv6vnxJh4T9wa7sSVL8RMJb0/edit?usp=sharing',
+                   sheet_url = 'https://docs.google.com/spreadsheets/d/1ZNJmiDtZzbH3-QUHpicQZVFUhHoQIXxeHRwTvroqH8w/edit#gid=0',
                    scold = 1,
-                   folder_id = "") {
+                   folder_id = "",
+                   tab = true) {
 
   // opening regex sheet
   let sheet = SpreadsheetApp.openByUrl(sheet_url);
@@ -84,15 +85,32 @@ function titleComp(cal_indices = [0],
     }
   }
 
-  // creating sheet
-  let data = SpreadsheetApp.create(`Cumulative Times: ${(new Date(start)).toDateString()} - ${(new Date(end)).toDateString()}`);
+  let out_url; let data;
 
-  let out_url = data.getUrl();
+  // creating sheet; either a new sheet or adding a sheet to the title key
+
+  // ADD TO TITLE KEY:
+  if (tab == true) {
+    sheet.insertSheet(`Hours: ${(new Date(start)).toDateString()} - ${(new Date(end)).toDateString()}`);
+    out_url = sheet_url;
+  }
+
+
+  // OR MAKE NEW SHEET:
+  else {
+    data = SpreadsheetApp.create(`Hours: ${(new Date(start)).toDateString()} - ${(new Date(end)).toDateString()}`);
+    out_url = data.getUrl();
+  }
 
   // opening and formatting data sheet
   sheet = SpreadsheetApp.openByUrl(out_url);
   SpreadsheetApp.setActiveSpreadsheet(sheet);
-  SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
+  sheet.getSheets();
+  if (tab == true){
+    SpreadsheetApp.setActiveSheet(sheet.getSheets()[1]);
+  } else{
+    SpreadsheetApp.setActiveSheet(sheet.getSheets()[0]);
+  }
 
   range = SpreadsheetApp.getActiveSheet().getRange(`A1:H2`);
   range.getCell(1, 1).setValue("(time in hrs)");
@@ -146,12 +164,12 @@ function titleComp(cal_indices = [0],
   }
 
   // move sheet to target folder
-  if (folder_id!="" && folder_id!=" "){
+  if ((folder_id!="") && (folder_id!=" ") && (tab == false)){
     let file = DriveApp.getFileById(sheet.getId());
     DriveApp.getFolderById(folder_id).addFile(file);
     DriveApp.getRootFolder().removeFile(file);
   }
-
+  Logger.log(out_url);
   return out_url;
 }
 
@@ -182,3 +200,10 @@ function trial(url){
 function test(folder_id){
   DriveApp.getFolderById(folder_id);
 }
+
+
+
+
+
+
+

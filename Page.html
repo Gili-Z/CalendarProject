@@ -16,6 +16,7 @@
       <br>
       <br>
 
+
     <!-- sheet -->
     <label style="font-family:georgia,garamond,serif; font-style:italic; color: #247325;"> Key (Google Sheet) URL: </label> <input type = "text" id = "link" style="width:1000px;">
       <br>
@@ -26,6 +27,7 @@
     </a>
       <br>
       <br>
+
 
     <!-- dates -->
     <label style="font-family:georgia,garamond,serif; font-style:italic; color: #2c2ec7;"> 
@@ -45,21 +47,34 @@
        (MM/DD/YY or Month Day, Year)
     </label> <input type = "text" id = "end_date">
       <br>
+      <br>
+
+
+    <!-- add as tab to title sheet -->
+    <input type="checkbox" id = "add_as_tab" checked> 
+    <label  style="color:#801925; font-family:georgia,garamond,serif; font-style:italic; font-size:20;"> I'd like to add the data to a new tab on the key spreadsheet. <label>
+    <label style="color:black; font-style:normal;">
+      <br>
+      <br>
+      <br>
+
 
     <!-- destination folder -->
-    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #411959;"> 
-      Destination Folder ID (optional):
+    <label style="font-family:georgia,garamond,serif; font-style:italic; color: #411959; margin-left:40px;"> 
+      OR Specify Destination Folder ID (optional):
     </label> 
 
     <input type = "text" id = "fold_id" style="width:500px;" value="">
       <br>
-      <br>
+      
+      
 
-    <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e; margin-left:40px"> 
+    <label style="font-family:georgia,garamond,serif; font-style:italic;color: #6e6e6e; margin-left:80px"> 
         (https://drive.google.com/drive/u/0/folders/
           <mark style="background-color:#fcf8c7;">0BytqP_CmvLAWTHZuWHRfUmlsaW8</mark>
         ?resourcekey=0-yzHF-sWBhyS8lmn_wUcIOA)
     </label> 
+      <br>
       <br>
       <br>
 
@@ -70,6 +85,7 @@
     
       <br>
       <br>
+
 
     <!-- calendars -->
     <h3 style="font-family:georgia,garamond,serif; font-style: normal; color:black;"> Which calendars would you like to sweep? </h3> 
@@ -129,6 +145,7 @@
         end = document.getElementById("end_date").value;
         cal_list = [];
         fold_id = document.getElementById("fold_id").value;
+        tab = document.getElementById("add_as_tab").checked;
 
         // assembling calendar index list
         for (i =0; i<Infinity; i++){
@@ -171,7 +188,7 @@
 
         if (runs == true){
           google.script.run.withSuccessHandler(onSuccess).withFailureHandler(eh).
-                    titleComp(cal_list, start, end, link, scold, fold_id);
+                    titleComp(cal_list, start, end, link, scold, fold_id, tab);
           
           alert("Running... ");
 
