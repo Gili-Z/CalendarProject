@@ -4,7 +4,7 @@ function titleComp(cal_indices = [0],
                    start = new Date(), 
                    end = new Date((new Date()).getTime()+7*24*60*60*1000),
                    sheet_url = 'https://docs.google.com/spreadsheets/d/1ZNJmiDtZzbH3-QUHpicQZVFUhHoQIXxeHRwTvroqH8w/edit#gid=0',
-                   scold = 1,
+                   scold = 0,
                    folder_id = "",
                    tab = true) {
 
@@ -79,7 +79,7 @@ function titleComp(cal_indices = [0],
       if (scold == true){
         if (should_i_email == true) {
         // this would email 'creator', but i don't want to accidentally email anyone right now
-        GmailApp.sendEmail("gili4prez@gmail.com", "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" on ${events[j].getStartTime().toDateString()} was titled incorrectly. Please refer to the spreadsheet at ${sheet_url} to review naming conventions.\n\nThank you!\nFrom Calbot`);
+        GmailApp.sendEmail(creator, "(BOT) Calendar Naming Issue", `Hello!\n\nYour event: "${title}" on ${events[j].getStartTime().toDateString()} was titled incorrectly. Please refer to the spreadsheet at ${sheet_url} to review naming conventions.\n\nThank you!\nFrom Calbot`);
         }
       }
     }
